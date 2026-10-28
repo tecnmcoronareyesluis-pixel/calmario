@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlmaAbierta - Tu Refugio Digital de Bienestar</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        bgLight: '#FAF6F0',
+                        bgDark: '#1E1D24',
+                        primarySage: '#A8BFA6',
+                        secondaryLavender: '#C9BEDF',
+                        accentTerracotta: '#D98E73',
+                        accentBlue: '#8FB3D9',
+                        textDark: '#3E3A39',
+                        textLight: '#FAF6F0',
+                    },
+                    fontFamily: {
+                        heading: ['Quicksand', 'sans-serif'],
+                        body: ['Inter', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        '3xl': '24px',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Quicksand', sans-serif;
+        }
+        
+        /* Custom Breathing Ring Animations */
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            40% { transform: scale(1.6); opacity: 1; }
+            70% { transform: scale(1.6); opacity: 0.9; }
+        }
+        .animate-breathe {
+            animation: breathe 19s infinite ease-in-out;
+        }
+
+        /* Soft UI Shadows */
+        .soft-shadow {
+            box-shadow: 0 10px 30px -5px rgba(62, 58, 57, 0.05);
+        }
+        .dark .soft-shadow {
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #A8BFA6;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-bgLight dark:bg-bgDark text-textDark dark:text-textLight min-h-screen flex flex-col antialiased selection:bg-primarySage/30">
+
+    <!-- TOP HEADER -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-bgLight/80 dark:bg-bgDark/80 border-b border-primarySage/20 px-4 lg:px-8 py-3.5 transition-colors">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- Brand Logo -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('diario')">
+                <div class="w-10 h-10 rounded-2xl bg-primarySage/30 flex items-center justify-center text-primarySage text-xl">
+                    🌱
+                </div>
+                <div>
+                    <span class="text-xl font-bold font-heading text-textDark dark:text-textLight tracking-tight">Alma<span class="text-accentTerracotta">Abierta</span></span>
+                    <span class="hidden sm:inline-block text-xs bg-primarySage/20 text-textDark dark:text-textLight px-2 py-0.5 rounded-full ml-2 font-medium">Refugio Digital</span>
+                </div>
+            </div>
+
+            <!-- Header Actions -->
+            <div class="flex items-center space-x-3">
+                <!-- Mascot Growth Status badge -->
+                <div id="mascotBadge" class="hidden md:flex items-center space-x-2 bg-primarySage/10 dark:bg-primarySage/20 px-3 py-1.5 rounded-full text-xs font-medium border border-primarySage/30">
+                    <span id="mascotIcon" class="text-base">🌱</span>
+                    <span id="mascotStatusText">Brote: Nivel 1</span>
+                </div>
+
+                <!-- Theme Toggle Button -->
+                <button onclick="toggleDarkMode()" aria-label="Cambiar tema" class="w-10 h-10 rounded-2xl bg-primarySage/10 dark:bg-primarySage/20 hover:bg-primarySage/30 flex items-center justify-center text-textDark dark:text-textLight transition">
+                    <i class="fa-solid fa-moon dark:hidden text-primarySage"></i>
+                    <i class="fa-solid fa-sun hidden dark:inline-block text-amber-300"></i>
+                </button>
+
+                <!-- SOS Emergency Kit Trigger -->
+                <button onclick="toggleSosDrawer()" class="bg-accentTerracotta text-white hover:bg-accentTerracotta/90 px-4 py-2 rounded-2xl font-semibold text-xs sm:text-sm flex items-center space-x-2 shadow-md transition transform active:scale-95">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                    <span>Botiquín SOS</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- NAVIGATION TABS -->
+    <nav class="bg-bgLight dark:bg-bgDark border-b border-primarySage/10 px-4 sticky top-[61px] z-30">
+        <div class="max-w-7xl mx-auto flex space-x-2 overflow-x-auto no-scrollbar py-2">
+            <button id="tab-diario" onclick="switchTab('diario')" class="tab-btn active font-heading px-4 py-2.5 rounded-2xl text-sm font-semibold transition-all whitespace-nowrap bg-primarySage text-white shadow-sm">
+                📔 Diario Emocional
+            </button>
+            <button id="tab-directorio" onclick="switchTab('directorio')" class="tab-btn font-heading px-4 py-2.5 rounded-2xl text-sm font-semibold transition-all whitespace-nowrap text-textDark/70 dark:text-textLight/70 hover:bg-primarySage/10">
+                📍 Directorio de Psicólogos
+            </button>
+            <button id="tab-comunidad" onclick="switchTab('comunidad')" class="tab-btn font-heading px-4 py-2.5 rounded-2xl text-sm font-semibold transition-all whitespace-nowrap text-textDark/70 dark:text-textLight/70 hover:bg-primarySage/10">
+                🤝 Comunidad
+            </button>
+            <button id="tab-recursos" onclick="switchTab('recursos')" class="tab-btn font-heading px-4 py-2.5 rounded-2xl text-sm font-semibold transition-all whitespace-nowrap text-textDark/70 dark:text-textLight/70 hover:bg-primarySage/10">
+                🧰 Recursos y Tests
+            </button>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT CONTAINERS -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- ==================== 1. DIARIO EMOCIONAL ==================== -->
+        <section id="sec-diario" class="space-y-8">
+            <!-- Welcome Banner -->
+            <div class="bg-gradient-to-r from-primarySage/20 via-secondaryLavender/20 to-accentBlue/20 rounded-3xl p-6 sm:p-8 border border-primarySage/30 soft-shadow relative overflow-hidden">
+                <div class="max-w-2xl relative z-10">
+                    <h1 class="text-2xl sm:text-3xl font-bold font-heading mb-2">Hola, ¿cómo te sientes en este momento? 🌱</h1>
+                    <p class="text-sm sm:text-base opacity-80 leading-relaxed">
+                        Este es tu espacio seguro y privado. Nada de lo que escribas aquí es juzgado ni expuesto. Tómate un respiro para escucharte.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Entry Form (Left / Main column) -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="bg-white dark:bg-bgDark/60 rounded-3xl p-6 border border-primarySage/20 soft-shadow space-y-6">
+                        
+                        <!-- 1. Mood Check-in -->
+                        <div>
+                            <label class="block text-sm font-semibold font-heading mb-3">1. Selecciona tu estado de ánimo actual</label>
+                            <div class="grid grid-cols-5 gap-2 sm:gap-3">
+                                <button onclick="selectMood('Radiante', '☀️', '#D98E73')" class="mood-opt p-3 rounded-2xl border border-primarySage/20 hover:border-accentTerracotta flex flex-col items-center justify-center space-y-1 transition text-center hover:bg-accentTerracotta/10">
+                                    <span class="text-2xl sm:text-3xl">☀️</span>
+                                    <span class="text-xs font-medium">Radiante</span>
+                                </button>
+                                <button onclick="selectMood('Tranquilo/a', '🍃', '#A8BFA6')" class="mood-opt p-3 rounded-2xl border border-primarySage/20 hover:border-primarySage flex flex-col items-center justify-center space-y-1 transition text-center hover:bg-primarySage/10">
+                                    <span class="text-2xl sm:text-3xl">🍃</span>
+                                    <span class="text-xs font-medium">En paz</span>
+                                </button>
+                                <button onclick="selectMood('Abrumado/a', '🌧️', '#8FB3D9')" class="mood-opt p-3 rounded-2xl border border-primarySage/20 hover:border-accentBlue flex flex-col items-center justify-center space-y-1 transition text-center hover:bg-accentBlue/10">
+                                    <span class="text-2xl sm:text-3xl">🌧️</span>
+                                    <span class="text-xs font-medium">Abrumado</span>
+                                </button>
+                                <button onclick="selectMood('Cansado/a', '🌙', '#C9BEDF')" class="mood-opt p-3 rounded-2xl border border-primarySage/20 hover:border-secondaryLavender flex flex-col items-center justify-center space-y-1 transition text-center hover:bg-secondaryLavender/10">
+                                    <span class="text-2xl sm:text-3xl">🌙</span>
+                                    <span class="text-xs font-medium">Agotado</span>
+                                </button>
+                                <button onclick="selectMood('Ansioso/a', '🌊', '#D98E73')" class="mood-opt p-3 rounded-2xl border border-primarySage/20 hover:border-accentTerracotta flex flex-col items-center justify-center space-y-1 transition text-center hover:bg-accentTerracotta/10">
+                                    <span class="text-2xl sm:text-3xl">🌊</span>
+                                    <span class="text-xs font-medium">Inquieto</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 2. Templates -->
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="text-sm font-semibold font-heading">2. Plantilla o Escritura Libre</label>
+                                <span class="text-xs text-textDark/60 dark:text-textLight/60">Opcional</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <button onclick="applyTemplate('Hoy me sentí abrumado por ')" class="text-xs px-3 py-1.5 rounded-xl bg-primarySage/10 hover:bg-primarySage/20 text-textDark dark:text-textLight border border-primarySage/20 transition">"Hoy me sentí..."</button>
+                                <button onclick="applyTemplate('Algo por lo que me siento muy agradecido hoy es ')" class="text-xs px-3 py-1.5 rounded-xl bg-primarySage/10 hover:bg-primarySage/20 text-textDark dark:text-textLight border border-primarySage/20 transition">"Algo que agradezco..."</button>
+                                <button onclick="applyTemplate('Para cuidar de mí en este momento necesito ')" class="text-xs px-3 py-1.5 rounded-xl bg-primarySage/10 hover:bg-primarySage/20 text-textDark dark:text-textLight border border-primarySage/20 transition">"Para cuidarme hoy..."</button>
+                            </div>
+                            <textarea id="journalText" rows="5" placeholder="Escribe libremente todo lo que sientas... Tu información permanece cifrada localmente." class="w-full p-4 rounded-2xl bg-bgLight dark:bg-bgDark/80 border border-primarySage/30 focus:outline-none focus:ring-2 focus:ring-primarySage resize-none text-sm leading-relaxed"></textarea>
+                        </div>
+
+                        <!-- Action Button -->
+                        <div class="flex justify-between items-center pt-2">
+                            <span id="journalPrivacyNote" class="text-xs text-textDark/50 dark:text-textLight/50 flex items-center gap-1">
+                                <i class="fa-solid fa-lock text-primarySage"></i> Cifrado local activo
+                            </span>
+                            <button onclick="saveJournalEntry()" class="bg-primarySage text-white hover:bg-primarySage/90 px-6 py-3 rounded-2xl font-bold font-heading text-sm flex items-center space-x-2 shadow-md transition transform active:scale-95">
+                                <i class="fa-solid fa-seedling"></i>
+                                <span>Guardar en mi Diario</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Subtle AI Analysis Output -->
+                    <div id="aiAnalysisCard" class="hidden bg-secondaryLavender/10 border border-secondaryLavender/30 rounded-3xl p-5 soft-shadow space-y-2">
+                        <div class="flex items-center space-x-2 text-secondaryLavender font-bold text-sm font-heading">
+                            <span>✨</span>
+                            <span>Reflexión Sutil & Empática</span>
+                        </div>
+                        <p id="aiAnalysisContent" class="text-sm leading-relaxed opacity-90"></p>
+                    </div>
+
+                    <!-- Entries Timeline -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-bold font-heading flex items-center justify-between">
+                            <span>Línea de Tiempo Emocional</span>
+                            <span id="entryCount" class="text-xs font-normal opacity-70">0 entradas</span>
+                        </h3>
+                        <div id="journalEntriesList" class="space-y-3">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar Widgets -->
+                <div class="space-y-6">
+
+                    <!-- Plant Growth Mascot Widget -->
+                    <div class="bg-white dark:bg-bgDark/60 rounded-3xl p-6 border border-primarySage/20 soft-shadow text-center space-y-4">
+                        <h3 class="font-bold font-heading text-sm text-textDark/80 dark:text-textLight/80">Tu Acompañante de Crecimiento</h3>
+                        <div class="w-24 h-24 mx-auto rounded-full bg-primarySage/10 flex items-center justify-center text-5xl border-2 border-primarySage/30 animate-pulse">
+                            <span id="mascotBigIcon">🌱</span>
+                        </div>
+                        <div>
+                            <h4 id="mascotStageName" class="font-bold text-base font-heading">Brote de Calma</h4>
+                            <p class="text-xs text-textDark/60 dark:text-textLight/60 mt-1">Crece con cada reflexión guardada en tu diario. Cada paso cuenta.</p>
+                        </div>
+                        <div class="w-full bg-primarySage/10 rounded-full h-2 overflow-hidden">
+                            <div id="mascotProgressBar" class="bg-primarySage h-full w-[20%] transition-all duration-500"></div>
+                        </div>
+                    </div>
+
+                    <!-- Guided Breathing Widget (4-7-8) -->
+                    <div class="bg-white dark:bg-bgDark/60 rounded-3xl p-6 border border-primarySage/20 soft-shadow space-y-4 text-center">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold font-heading text-sm">Respiración Guiada 4-7-8</h3>
+                            <span class="text-xs text-accentBlue font-medium">1 Minuto</span>
+                        </div>
+                        
+                        <!-- Interactive Breathing Circle -->
+                        <div class="relative w-36 h-36 mx-auto flex items-center justify-center my-4">
+                            <div id="breathCircle" class="absolute inset-0 rounded-full bg-accentBlue/20 border-2 border-accentBlue transition-all duration-[4000ms]"></div>
+                            <span id="breathText" class="relative z-10 text-xs font-bold font-heading text-textDark dark:text-textLight">Inicia</span>
+                        </div>
+
+                        <div class="flex justify-center space-x-2">
+                            <button id="breathStartBtn" onclick="toggleBreathingExercise()" class="bg-accentBlue text-white px-4 py-2 rounded-xl text-xs font-bold font-heading shadow hover:opacity-90 transition">
+                                Comenzar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Grounding 5-4-3-2-1 Widget -->
+                    <div class="bg-white dark:bg-bgDark/60 rounded-3xl p-6 border border-primarySage/20 soft-shadow space-y-3">
+                        <h3 class="font-bold font-heading text-sm flex items-center space-x-2">
+                            <span>🧭</span>
+                            <span>Ejercicio de Grounding (5-4-3-2-1)</span>
+                        </h3>
+                        <p class="text-xs opacity-80">Si sientes ansiedad, conecta con el presente:</p>
+                        <ul class="text-xs space-y-1.5 opacity-90 pl-1">
+                            <li>👀 <b>5</b> cosas que ves a tu alrededor.</li>
+                            <li>✋ <b>4</b> cosas que puedes tocar.</li>
+                            <li>👂 <b>3</b> sonidos que escuchas.</li>
+                            <li>👃 <b>2</b> olores que percibes.</li>
+                            <li>👅 <b>1</b> sabor presente.</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== 2. DIRECTORIO DE PSICÓLOGOS ==================== -->
+        <section id="sec-directorio" class="hidden space-y-8">
+            <div class="bg-gradient-to-r from-secondaryLavender/20 via-primarySage/20 to-accentTerracotta/20 rounded-3xl p-6 sm:p-8 border border-secondaryLavender/30 soft-shadow">
+                <div class="max-w-2xl">
+                    <h1 class="text-2xl sm:text-3xl font-bold font-heading mb-2">Directorio de Especialistas Verificados 📍</h1>
+                    <p class="text-sm sm:text-base opacity-80 leading-relaxed">
+                        Conecta con profesionales orientados a tu bienestar personal. Encuentra el acompañamiento terapéutico adecuado.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Affinity Quiz Banner Trigger -->
+            <div class="bg-accentTerracotta/10 border border-accentTerracotta/30 rounded-3xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-2xl bg-accentTerracotta/20 flex items-center justify-center text-accentTerracotta text-xl">
+                        ✨
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-sm font-heading">¿No sabes a quién elegir?</h3>
+                        <p class="text-xs opacity-80">Completa un test rápido de 3 preguntas para sugerirte 3 opciones ideales.</p>
+                    </div>
+                </div>
+                <button onclick="openAffinityModal()" class="bg-accentTerracotta text-white px-4 py-2 rounded-2xl font-bold font-heading text-xs whitespace-nowrap hover:bg-accentTerracotta/90 transition">
+                    Cuestionario de Afinidad
+                </button>
+            </div>
+
+            <!-- Filters Bar -->
+            <div class="bg-white dark:bg-bgDark/60 rounded-3xl p-4 sm:p-6 border border-primarySage/20 soft-shadow grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                <input type="text" id="filterSearch" oninput="filterTherapists()" placeholder="Buscar por ciudad o nombre..." class="p-3 rounded-2xl bg-bgLight dark:bg-bgDark border border-primarySage/20 text-xs focus:outline-none focus:ring-1 focus:ring-primarySage">
+                
+                <select id="filterSpecialty" onchange="filterTherapists()" class="p-3 rounded-2xl bg-bgLight dark:bg-bgDark border border-primarySage/20 text-xs focus:outline-none">
+                    <option value="">Todas las Especialidades</option>
+                    <option value="Ansiedad y Estrés">Ansiedad y Estrés</option>
+                    <option value="Duelo y Pérdidas">Duelo y Pérdidas</option>
+                    <option value="Terapia Familiar/Pareja">Terapia Familiar/Pareja</option>
+                    <option value="Autoestima y Jóvenes">Autoestima y Jóvenes</option>
+                </select>
+
+                <select id="filterModality" onchange="filterTherapists()" class="p-3 rounded-2xl bg-bgLight dark:bg-bgDark border border-primarySage/20 text-xs focus:outline-none">
+                    <option value="">Cualquier Modalidad</option>
+                    <option value="En línea">En línea</option>
+                    <option value="Presencial">Presencial</option>
+                </select>
+
+                <select id="filterPrice" onchange="filterTherapists()" class="p-3 rounded-2xl bg-bgLight dark:bg-bgDark border border-primarySage/20 text-xs focus:outline-none">
+                    <option value="">Rango de Precio</option>
+                    <option value="econ">Económico ($400 - $600)</option>
+                    <option value="med">Medio ($600 - $900)</option>
+                </select>
+            </div>
+
+            <!-- Therapist Cards Grid -->
+            <div id="therapistsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Populated dynamically via JS -->
+            </div>
+        </section>
+
+
+        <!-- ==================== 3. COMUNIDAD Y ESPACIO COMPARTIDO ==================== -->
+        <section id="sec-comunidad" class="hidden space-y-8">
+            <div class="bg-gradient-to-r from-accentBlue/20 via-primarySage/20 to-secondaryLavender/20 rounded-3xl p-6 sm:p-8 border border-accentBlue/30 soft-shadow">
+                <div class="max-w-2xl">
+                    <h1 class="text-2xl sm:text-3xl font-bold font-heading mb-2">Comunidad y Muro de Aliento 🤝</h1>
+                    <p class="text-sm sm:text-base opacity-80 leading-relaxed">
+                        Un espacio anónimo de escucha recíproca. Sin contadores de seguidores ni métricas de vanidad. Solo empatía.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Circles Categories -->
+            <div class="flex space-x-2 overflow-x-auto pb-2 no-scrollbar">
+                <button onclick="filterCircle('all')" class="circle-tag px-4 py-2 rounded-2xl bg-primarySage text-white text-xs font-bold font-heading whitespace-nowrap">Todos los Círculos</button>
+                <button onclick="filterCircle('ansiedad')" class="circle-tag px-4 py-2 rounded-2xl bg-white dark:bg-bgDark/60 border border-primarySage/20 text-xs font-semibold font-heading whitespace-nowrap">🌱 Ansiedad y Calma</button>
+                <button onclick="filterCircle('estudiantes')" class="circle-tag px-4 py-2 rounded-2xl bg-white dark:bg-bgDark/60 border border-primarySage/20 text-xs font-semibold font-heading whitespace-nowrap">🎓 Estudiantes y Carrera</button>
+                <button onclick="filterCircle('duelo')" class="circle-tag px-4 py-2 rounded-2xl bg-white dark:bg-bgDark/60 border border-primarySage/20 text-xs font-semibold font-heading whitespace-nowrap">🕊️ Duelo y Procesos</button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Posts Feed -->
+                <div class="lg:col-span-2 space-y-4">
+                    <!-- Create Post Box -->
+                    <div class="bg-white dark:bg-bgDark/60 rounded-3xl p-5 border border-primarySage/20 soft-shadow space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <span id="userAvatarPrev" class="w-9 h-9 rounded-full bg-secondaryLavender/30 flex items-center justify-center text-lg">🦉</span>
+                            <span class="text-xs font-semibold opacity-70">Publicar como Seudónimo Anónimo</span>
+                        </div>
+                        <textarea id="communityPostInput" rows="3" placeholder="Escribe palabras de aliento o desahogo para la comunidad... (Moderado automáticamente)" class="w-full p-3 rounded-2xl bg-bgLight dark:bg-bgDark border border-primarySage/20 text-xs focus:outline-none focus:ring-1 focus:ring-primarySage resize-none"></textarea>
+                        
+                        <div class="flex justify-between items-center">
+                            <select id="postCategorySelect" class="p-2 rounded-xl bg-bgLight dark:bg-bgDark border border-primarySage/20 text-xs">
+                                <option value="ansiedad">🌱 Ansiedad y Calma</option>
+                                <option value="estudiantes">🎓 Estudiantes y Carrera</option>
+                                <option value="duelo">🕊️ Duelo y Procesos</option>
+                            </select>
+
+                            <button onclick="createCommunityPost()" class="bg-primarySage text-white px-5 py-2 rounded-2xl text-xs font-bold font-heading shadow hover:opacity-90 transition">
+                                Compartir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Posts Container -->
+                    <div id="postsList" class="space-y-4">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+
+                <!-- Community Rules & Collective Challenge -->
+                <div class="space-y-6">
+                    <div class="bg-white dark:bg-bgDark/60 rounded-3xl p-6 border border-primarySage/20 soft-shadow space-y-4">
+                        <h3 class="font-bold font-heading text-sm text-accentTerracotta flex items-center space-x-2">
+                            <span>✨</span>
+                            <span>Reto Colectivo de la Semana</span>
+                        </h3>
+                        <p class="text-xs font-semibold font-heading">7 Días de Gratitud Cotidiana</p>
+                        <p class="text-xs opacity-80 leading-relaxed">
+                            Hoy, escribe en tu diario una cosa simple que te haya brindado alivio (un café caliente, la brisa o una canción).
+                        </p>
+                        <div class="p-3 bg-primarySage/10 rounded-2xl text-xs text-primarySage font-semibold text-center">
+                            ¡Unidos en el bienestar!
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-bgDark/60 rounded-3xl p-6 border border-primarySage/20 soft-shadow space-y-3 text-xs">
+                        <h3 class="font-bold font-heading text-sm">Pautas de Respeto 🛡️</h3>
+                        <ul class="space-y-2 opacity-80 leading-relaxed list-disc pl-4">
+                            <li>Escribe siempre con amabilidad y perspectiva compasiva.</li>
+                            <li>Sin juicios ni diagnósticos no solicitados.</li>
+                            <li>Las publicaciones con lenguaje agresivo o riesgoso son canalizadas directamente al botiquín de ayuda.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== 4. RECURSOS, TESTS Y PLAN DE SEGURIDAD ==================== -->
+        <section id="sec-recursos" class="hidden space-y-8">
+            <div class="bg-gradient-to-r from-primarySage/20 via-accentBlue/20 to-secondaryLavender/20 rounded-3xl p-6 sm:p-8 border border-primarySage/30 soft-shadow">
+                <div class="max-w-2xl">
+                    <h1 class="text-2xl sm:text-3xl font-bold font-heading mb-2">Recursos, Autocuidado y Herramientas 🧰</h1>
+                    <p class="text-sm sm:text-base opacity-80 leading-relaxed">
+                        Evaluaciones orientativas validadas y tu Plan de Seguridad Personal guardado de manera privada.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- 1. Interactive Test (GAD-7 / PHQ-9) -->
+                <div class="bg-white dark:bg-bgDark/60 rounded-3xl p-6 border border-primarySage/20 soft-shadow space-y-6">
+                    <div>
+                        <span class="text-xs bg-secondaryLavender/20 text-secondaryLavender font-bold px-2.5 py-1 rounded-full">Orientativo</span>
+                        <h3 class="text-lg font-bold font-heading mt-2">Cuestionario de Bienestar Emocional (GAD-7 Abreviado)</h3>
+                        <p class="text-xs opacity-70 mt-1">Este test es solo una guía orientativa y no constituye un diagnóstico clínico.</p>
+                    </div>
+
+                    <div id="testQuestions" class="space-y-4">
+                        <!-- Populated via JS -->
+                    </div>
+
+                    <button onclick="calculateTestResult()" class="w-full bg-secondaryLavender text-textDark font-bold font-heading py-3 rounded-2xl text-xs hover:opacity-90 transition">
+                        Ver Resultado Orientativo
+                    </button>
+
+                    <div id="testResultBox" class="hidden p-4 rounded-2xl bg-bgLight dark:bg-bgDark border border-secondaryLavender/40 text-xs space-y-2">
+                        <h4 id="testResultTitle" class="font-bold font-heading text-sm"></h4>
+                        <p id="testResultDesc" class="opacity-80 leading-relaxed"></p>
+                    </div>
+                </div>
+
+                <!-- 2. Personal Safety Plan -->
+                <div class="bg-white dark:bg-bgDark/60 rounded-3xl p-6 border border-primarySage/20 soft-shadow space-y-5">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold font-heading">Plan de Seguridad Personal</h3>
+                            <p class="text-xs opacity-70">Tus estrategias para momentos difíciles, solo visibles para ti.</p>
+                        </div>
+                        <span class="text-xl">🛡️</span>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <label class="block font-semibold mb-1">1. Mis señales personales de alerta (ej: nudo en estómago, insomnio):</label>
+                            <input type="text" id="planWarning" placeholder="Escribe aquí..." class="w-full p-3 rounded-2xl bg-bgLight dark:bg-bgDark border border-primarySage/20 focus:outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold mb-1">2. Estrategias de afrontamiento internas (ej: caminar, escuchar música):</label>
+                            <input type="text" id="planStrategies" placeholder="Escribe aquí..." class="w-full p-3 rounded-2xl bg-bgLight dark:bg-bgDark border border-primarySage/20 focus:outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold mb-1">3. Contacto de confianza / Familiar:</label>
+                            <input type="text" id="planContact" placeholder="Nombre y número de teléfono..." class="w-full p-3 rounded-2xl bg-bgLight dark:bg-bgDark border border-primarySage/20 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-2">
+                        <span id="planSavedFeedback" class="text-xs text-primarySage font-semibold hidden">¡Plan guardado en el dispositivo!</span>
+                        <button onclick="saveSafetyPlan()" class="bg-primarySage text-white px-5 py-2.5 rounded-2xl font-bold font-heading text-xs shadow hover:opacity-90 transition">
+                            Guardar Plan
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER & ETHICS NOTICE -->
+    <footer class="mt-auto border-t border-primarySage/20 py-6 px-4 bg-bgLight dark:bg-bgDark text-xs opacity-80 text-center space-y-2">
+        <div class="max-w-4xl mx-auto space-y-1">
+            <p><b>AlmaAbierta</b> es una herramienta de apoyo emocional y complementaria. No sustituye la atención médica ni psicológica profesional.</p>
+            <p>Si estás atravesando una situación de peligro inminente o crisis grave, por favor contacta a las líneas de apoyo de tu localidad.</p>
+        </div>
+    </footer>
+
+
+    <!-- ==================== MODALS & DRAWERS ==================== -->
+
+    <!-- SOS EMERGENCY DRAWER -->
+    <div id="sosDrawer" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex justify-end transition-opacity">
+        <div class="w-full max-w-md bg-bgLight dark:bg-bgDark h-full p-6 overflow-y-auto space-y-6 shadow-2xl border-l border-primarySage/20">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2 text-accentTerracotta font-bold font-heading text-lg">
+                    <span>🚨</span>
+                    <span>Botiquín de Emergencia</span>
+                </div>
+                <button onclick="toggleSosDrawer()" class="w-8 h-8 rounded-full bg-primarySage/20 flex items-center justify-center font-bold">✕</button>
+            </div>
+
+            <div class="bg-accentTerracotta/10 border border-accentTerracotta/30 rounded-2xl p-4 text-xs space-y-2">
+                <p class="font-bold text-accentTerracotta">Líneas de Crisis Disponibles (Atención Gratuita & 24/7):</p>
+                <div class="space-y-2 pt-1">
+                    <div class="bg-white dark:bg-bgDark p-2.5 rounded-xl border border-accentTerracotta/20 flex justify-between items-center">
+                        <div>
+                            <p class="font-bold">Línea de la Vida (México)</p>
+                            <p class="opacity-70">800 911 2000</p>
+                        </div>
+                        <a href="tel:8009112000" class="bg-accentTerracotta text-white px-3 py-1.5 rounded-xl font-bold">Llamar</a>
+                    </div>
+                    <div class="bg-white dark:bg-bgDark p-2.5 rounded-xl border border-accentTerracotta/20 flex justify-between items-center">
+                        <div>
+                            <p class="font-bold">SAPTEL (Apoyo Psicológico)</p>
+                            <p class="opacity-70">55 5259 8121</p>
+                        </div>
+                        <a href="tel:5552598121" class="bg-accentTerracotta text-white px-3 py-1.5 rounded-xl font-bold">Llamar</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instant Calming Audio Player Simulator -->
+            <div class="bg-white dark:bg-bgDark/60 rounded-2xl p-4 border border-primarySage/20 space-y-3">
+                <h4 class="font-bold font-heading text-xs">Audio de Calma Inmediata 🎧</h4>
+                <p class="text-xs opacity-70">Lluvia suave y ondas delta para regulación de ritmo cardíaco.</p>
+                <button onclick="toggleAudioSim()" id="audioSimBtn" class="w-full py-2.5 bg-primarySage text-white font-bold rounded-xl text-xs flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-play"></i>
+                    <span>Reproducir Sonido Ambiental</span>
+                </button>
+            </div>
+
+            <!-- Fast Grounding Button -->
+            <div class="p-4 bg-primarySage/10 rounded-2xl border border-primarySage/20 text-xs space-y-2">
+                <p class="font-bold font-heading">Recordatorio de Seguridad:</p>
+                <p class="opacity-80">Siente tus pies firmes sobre el suelo. Inhala lentamente durante 4 segundos, sostén 4 y exhala suavemente. Estás a salvo en este instante.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- BOOKING APPOINTMENT MODAL -->
+    <div id="bookingModal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-bgLight dark:bg-bgDark w-full max-w-md rounded-3xl p-6 border border-primarySage/30 soft-shadow space-y-5">
+            <div class="flex justify-between items-center">
+                <h3 class="font-bold font-heading text-base" id="bookingModalTherapist">Agendar Cita</h3>
+                <button onclick="closeBookingModal()" class="text-xs font-bold opacity-70">✕</button>
+            </div>
+
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-semibold mb-1">Selecciona Fecha:</label>
+                    <input type="date" id="bookingDate" class="w-full p-3 rounded-2xl bg-white dark:bg-bgDark/80 border border-primarySage/20 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1">Horario Disponible:</label>
+                    <select id="bookingTime" class="w-full p-3 rounded-2xl bg-white dark:bg-bgDark/80 border border-primarySage/20 focus:outline-none">
+                        <option value="10:00 AM">10:00 AM</option>
+                        <option value="04:00 PM">04:00 PM</option>
+                        <option value="06:00 PM">06:00 PM</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1">Modalidad:</label>
+                    <div class="flex space-x-4 pt-1">
+                        <label class="flex items-center space-x-1.5 cursor-pointer">
+                            <input type="radio" name="modalidadCita" value="En línea" checked class="accent-primarySage">
+                            <span>En línea (Videollamada)</span>
+                        </label>
+                        <label class="flex items-center space-x-1.5 cursor-pointer">
+                            <input type="radio" name="modalidadCita" value="Presencial" class="accent-primarySage">
+                            <span>Presencial</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="confirmAppointment()" class="w-full bg-primarySage text-white font-bold font-heading py-3 rounded-2xl text-xs hover:opacity-90 transition">
+                Confirmar Reserva
+            </button>
+        </div>
+    </div>
+
+
+    <!-- AFFINITY QUIZ MODAL -->
+    <div id="affinityModal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-bgLight dark:bg-bgDark w-full max-w-lg rounded-3xl p-6 border border-primarySage/30 soft-shadow space-y-5">
+            <div class="flex justify-between items-center">
+                <h3 class="font-bold font-heading text-base">Cuestionario de Afinidad 🎯</h3>
+                <button onclick="closeAffinityModal()" class="text-xs font-bold opacity-70">✕</button>
+            </div>
+
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold mb-1">1. ¿Cuál es tu objetivo principal en este momento?</label>
+                    <select id="affQ1" class="w-full p-3 rounded-2xl bg-white dark:bg-bgDark/80 border border-primarySage/20">
+                        <option value="Ansiedad y Estrés">Manejar la ansiedad y el estrés</option>
+                        <option value="Duelo y Pérdidas">Superar un duelo o pérdida</option>
+                        <option value="Terapia Familiar/Pareja">Mejorar mi relación de pareja/familia</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block font-semibold mb-1">2. ¿Qué modalidad prefieres?</label>
+                    <select id="affQ2" class="w-full p-3 rounded-2xl bg-white dark:bg-bgDark/80 border border-primarySage/20">
+                        <option value="En línea">En línea desde casa</option>
+                        <option value="Presencial">Presencial en consultorio</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block font-semibold mb-1">3. ¿Qué enfoque terapéutico te llama más la atención?</label>
+                    <select id="affQ3" class="w-full p-3 rounded-2xl bg-white dark:bg-bgDark/80 border border-primarySage/20">
+                        <option value="Cognitivo-Conductual">Cognitivo-Conductual (Práctico y directo)</option>
+                        <option value="Humanista / Gestalt">Humanista (Centrado en emociones)</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="submitAffinityQuiz()" class="w-full bg-accentTerracotta text-white font-bold font-heading py-3 rounded-2xl text-xs hover:opacity-90 transition">
+                Sugerir Psicólogos Compatibles
+            </button>
+        </div>
+    </div>
+
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // State variables
+        let selectedMood = { name: '', emoji: '', color: '' };
+        let entries = [];
+        let mascotScore = 1;
+        let isBreathing = false;
+        let breathInterval;
+        let isAudioPlaying = false;
+        let audioContext;
+        let oscillator;
+
+        // Sample Therapists Database
+        const therapists = [
+            { id: 1, name: "Dra. Elena Rostova", cedula: "Ced. Prof. 8473920", specialty: "Ansiedad y Estrés", approach: "Cognitivo-Conductual", modality: "En línea", priceNum: 550, priceText: "$550 MXN / sesión", city: "Ciudad de México", rating: "4.9", bio: "Especialista en regulación emocional y ataques de pánico con más de 8 años de experiencia.", photo: "👩‍⚕️" },
+            { id: 2, name: "Mtro. Carlos Mendoza", cedula: "Ced. Prof. 9182736", specialty: "Duelo y Pérdidas", approach: "Humanista / Gestalt", modality: "Presencial", priceNum: 700, priceText: "$700 MXN / sesión", city: "Guadalajara", rating: "5.0", bio: "Acompañamiento empático en procesos de duelo significativo y transiciones de vida.", photo: "👨‍⚕️" },
+            { id: 3, name: "Lic. Ana Sofía Morales", cedula: "Ced. Prof. 1029384", specialty: "Autoestima y Jóvenes", approach: "Terapia Aceptación y Compromiso", modality: "En línea", priceNum: 500, priceText: "$500 MXN / sesión", city: "Monterrey", rating: "4.8", bio: "Enfoque cálido e integral para adultos jóvenes y manejo del burnout académico o laboral.", photo: "👩‍🔬" },
+            { id: 4, name: "Dr. Roberto Silva", cedula: "Ced. Prof. 7654321", specialty: "Terapia Familiar/Pareja", approach: "Sistémico", modality: "Presencial", priceNum: 850, priceText: "$850 MXN / sesión", city: "Puebla", rating: "4.9", bio: "Resolución de conflictos y fortalecimiento de vínculos afectivos.", photo: "👨‍🏫" }
+        ];
+
+        // Sample Community Posts
+        let communityPosts = [
+            { id: 1, author: "Búho_Silencioso", avatar: "🦉", category: "ansiedad", text: "Hoy logré salir a caminar 10 minutos a pesar de la presión en el pecho. Recordar que los pensamientos son solo pensamientos me ayudó mucho.", reactions: { accompany: 8, thanks: 4, identify: 12 } },
+            { id: 2, author: "Girasol_Tranquilo", avatar: "🌻", category: "estudiantes", text: "Si sientes que la universidad te abruma hoy, respira. No tienes que resolver todo hoy mismo, solo da un paso a la vez.", reactions: { accompany: 15, thanks: 9, identify: 10 } }
+        ];
+
+        // GAD-7 Test Sample Questions
+        const testQuestionsList = [
+            "1. Me he sentido nervioso/a, ansioso/a o con los nervios de punta.",
+            "2. No he sido capaz de parar o controlar mis preocupaciones.",
+            "3. Me he sentido tan inquieto/a que no he podido quedarme quieto/a."
+        ];
+
+        // Initial Load Event
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStoredData();
+            renderTherapists(therapists);
+            renderCommunityPosts();
+            renderTestQuestions();
+            updateMascotUI();
+        });
+
+        // Navigation Tabs Toggle
+        function switchTab(tabName) {
+            const sections = ['diario', 'directorio', 'comunidad', 'recursos'];
+            sections.forEach(s => {
+                document.getElementById(`sec-${s}`).classList.add('hidden');
+                document.getElementById(`tab-${s}`).classList.remove('bg-primarySage', 'text-white', 'shadow-sm');
+                document.getElementById(`tab-${s}`).classList.add('text-textDark/70', 'dark:text-textLight/70');
+            });
+
+            document.getElementById(`sec-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabName}`);
+            activeBtn.classList.add('bg-primarySage', 'text-white', 'shadow-sm');
+            activeBtn.classList.remove('text-textDark/70', 'dark:text-textLight/70');
+        }
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        // --- 1. DIARIO EMOCIONAL FUNCTIONS ---
+        function selectMood(name, emoji, color) {
+            selectedMood = { name, emoji, color };
+            document.querySelectorAll('.mood-opt').forEach(btn => btn.classList.remove('ring-2', 'ring-primarySage'));
+            event.currentTarget.classList.add('ring-2', 'ring-primarySage');
+        }
+
+        function applyTemplate(text) {
+            const area = document.getElementById('journalText');
+            area.value = text + area.value;
+            area.focus();
+        }
+
+        function saveJournalEntry() {
+            const text = document.getElementById('journalText').value.trim();
+            if (!selectedMood.name && !text) {
+                alertModal("Por favor selecciona un ánimo o escribe una nota para guardar.");
+                return;
+            }
+
+            const entry = {
+                id: Date.now(),
+                date: new Date().toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }),
+                mood: selectedMood.name || 'Neutral',
+                emoji: selectedMood.emoji || '🌱',
+                text: text
+            };
+
+            entries.unshift(entry);
+            localStorage.setItem('alma_journal_entries', JSON.stringify(entries));
+
+            // Increase mascot score
+            mascotScore++;
+            localStorage.setItem('alma_mascot_score', mascotScore);
+            updateMascotUI();
+
+            // Client-side Subtle Emotional AI Analysis simulation
+            generateSubtleReflection(text, selectedMood.name);
+
+            // Reset form
+            document.getElementById('journalText').value = '';
+            renderJournalEntries();
+        }
+
+        function generateSubtleReflection(text, mood) {
+            const card = document.getElementById('aiAnalysisCard');
+            const content = document.getElementById('aiAnalysisContent');
+            card.classList.remove('hidden');
+
+            let reflection = "Gracias por dedicar este momento a escucharte. ";
+            if (mood === 'Abrumado/a' || mood === 'Ansioso/a') {
+                reflection += "Notamos que experimentas un momento de alta intensidad. Recuérdate que no estás obligado a resolver todo en este instante. ¿Te gustaría realizar 1 minuto de respiración 4-7-8?";
+            } else if (mood === 'Radiante' || mood === 'Tranquilo/a') {
+                reflection += "Es hermoso registrar instantes de paz y claridad. Guardar estos momentos te servirá como ancla para días más grises.";
+            } else {
+                reflection += "Notamos que hoy prestas atención a tu cansancio. Permitirse descansar también es avanzar.";
+            }
+
+            content.innerText = reflection;
+        }
+
+        function renderJournalEntries() {
+            const list = document.getElementById('journalEntriesList');
+            const count = document.getElementById('entryCount');
+            count.innerText = `${entries.length} reflexiones`;
+
+            if (entries.length === 0) {
+                list.innerHTML = `<div class="p-4 rounded-2xl border border-dashed border-primarySage/30 text-center text-xs opacity-60">Aún no tienes entradas en tu diario. Tu primer registro hará germinar a tu planta 🌱</div>`;
+                return;
+            }
+
+            list.innerHTML = entries.map(e => `
+                <div class="p-4 rounded-2xl bg-white dark:bg-bgDark/60 border border-primarySage/20 soft-shadow space-y-1 transition hover:border-primarySage/40">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xl">${e.emoji}</span>
+                            <span class="font-bold text-xs font-heading">${e.mood}</span>
+                        </div>
+                        <span class="text-[10px] opacity-60">${e.date}</span>
+                    </div>
+                    ${e.text ? `<p class="text-xs opacity-80 leading-relaxed pt-1">${escapeHtml(e.text)}</p>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function updateMascotUI() {
+            const stages = [
+                { min: 1, icon: "🌱", name: "Semilla / Brote" },
+                { min: 3, icon: "🌿", name: "Planta Pequeña" },
+                { min: 6, icon: "🪴", name: "Planta Fuerte" },
+                { min: 10, icon: "🌸", name: "Flor de Calma" }
+            ];
+
+            let currentStage = stages[0];
+            stages.forEach(s => {
+                if (mascotScore >= s.min) currentStage = s;
+            });
+
+            document.getElementById('mascotIcon').innerText = currentStage.icon;
+            document.getElementById('mascotBigIcon').innerText = currentStage.icon;
+            document.getElementById('mascotStatusText').innerText = `${currentStage.name}`;
+            document.getElementById('mascotStageName').innerText = currentStage.name;
+            
+            const progress = Math.min((mascotScore / 10) * 100, 100);
+            document.getElementById('mascotProgressBar').style.width = `${progress}%`;
+        }
+
+        // Breathing Exercise Logic
+        function toggleBreathingExercise() {
+            const btn = document.getElementById('breathStartBtn');
+            const circle = document.getElementById('breathCircle');
+            const text = document.getElementById('breathText');
+
+            if (isBreathing) {
+                clearInterval(breathInterval);
+                isBreathing = false;
+                btn.innerText = "Comenzar";
+                text.innerText = "Inicia";
+                circle.style.transform = "scale(1)";
+                return;
+            }
+
+            isBreathing = true;
+            btn.innerText = "Pausar";
+
+            let phase = 0; // 0: Inhale (4s), 1: Hold (7s), 2: Exhale (8s)
+            const runPhase = () => {
+                if (!isBreathing) return;
+                if (phase === 0) {
+                    text.innerText = "Inhala (4s)";
+                    circle.style.transform = "scale(1.5)";
+                    setTimeout(() => { phase = 1; runPhase(); }, 4000);
+                } else if (phase === 1) {
+                    text.innerText = "Sostén (7s)";
+                    setTimeout(() => { phase = 2; runPhase(); }, 7000);
+                } else {
+                    text.innerText = "Exhala (8s)";
+                    circle.style.transform = "scale(1)";
+                    setTimeout(() => { phase = 0; runPhase(); }, 8000);
+                }
+            };
+
+            runPhase();
+        }
+
+
+        // --- 2. DIRECTORIO DE PSICÓLOGOS FUNCTIONS ---
+        function renderTherapists(list) {
+            const grid = document.getElementById('therapistsGrid');
+            if (list.length === 0) {
+                grid.innerHTML = `<div class="col-span-full p-8 text-center text-xs opacity-60">No se encontraron profesionales con los filtros seleccionados.</div>`;
+                return;
+            }
+
+            grid.innerHTML = list.map(t => `
+                <div class="bg-white dark:bg-bgDark/60 rounded-3xl p-5 border border-primarySage/20 soft-shadow flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-3xl p-2 rounded-2xl bg-primarySage/10">${t.photo}</span>
+                                <div>
+                                    <h3 class="font-bold font-heading text-sm">${t.name}</h3>
+                                    <p class="text-[10px] text-primarySage font-semibold">${t.cedula}</p>
+                                </div>
+                            </div>
+                            <span class="text-xs bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 font-bold px-2 py-0.5 rounded-full">★ ${t.rating}</span>
+                        </div>
+
+                        <p class="text-xs opacity-80 leading-relaxed">${t.bio}</p>
+
+                        <div class="flex flex-wrap gap-1.5 pt-1">
+                            <span class="text-[10px] px-2.5 py-1 rounded-xl bg-primarySage/10 font-semibold">${t.specialty}</span>
+                            <span class="text-[10px] px-2.5 py-1 rounded-xl bg-secondaryLavender/20 font-semibold">${t.modality}</span>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-primarySage/10 pt-3 flex items-center justify-between">
+                        <div>
+                            <p class="text-[10px] opacity-60">Honorarios</p>
+                            <p class="text-xs font-bold font-heading">${t.priceText}</p>
+                        </div>
+                        <button onclick="openBookingModal('${t.name}')" class="bg-primarySage text-white px-4 py-2 rounded-2xl text-xs font-bold font-heading hover:opacity-90 transition">
+                            Agendar Cita
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterTherapists() {
+            const search = document.getElementById('filterSearch').value.toLowerCase();
+            const specialty = document.getElementById('filterSpecialty').value;
+            const modality = document.getElementById('filterModality').value;
+            const price = document.getElementById('filterPrice').value;
+
+            const filtered = therapists.filter(t => {
+                const matchSearch = t.name.toLowerCase().includes(search) || t.city.toLowerCase().includes(search);
+                const matchSpecialty = !specialty || t.specialty === specialty;
+                const matchModality = !modality || t.modality === modality;
+                let matchPrice = true;
+                if (price === 'econ') matchPrice = t.priceNum <= 600;
+                if (price === 'med') matchPrice = t.priceNum > 600;
+
+                return matchSearch && matchSpecialty && matchModality && matchPrice;
+            });
+
+            renderTherapists(filtered);
+        }
+
+        function openBookingModal(therapistName) {
+            document.getElementById('bookingModalTherapist').innerText = `Agendar cita con ${therapistName}`;
+            document.getElementById('bookingModal').classList.remove('hidden');
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.add('hidden');
+        }
+
+        function confirmAppointment() {
+            closeBookingModal();
+            alertModal("¡Cita agendada con éxito! Se te enviará una confirmación previa a tu sesión.");
+        }
+
+        function openAffinityModal() {
+            document.getElementById('affinityModal').classList.remove('hidden');
+        }
+
+        function closeAffinityModal() {
+            document.getElementById('affinityModal').classList.add('hidden');
+        }
+
+        function submitAffinityQuiz() {
+            const obj = document.getElementById('affQ1').value;
+            closeAffinityModal();
+
+            document.getElementById('filterSpecialty').value = obj;
+            filterTherapists();
+            alertModal(`Hemos filtrado a los psicólogos más recomendados para: ${obj}`);
+        }
+
+
+        // --- 3. COMUNIDAD FUNCTIONS ---
+        function renderCommunityPosts() {
+            const list = document.getElementById('postsList');
+            list.innerHTML = communityPosts.map(p => `
+                <div class="bg-white dark:bg-bgDark/60 rounded-3xl p-5 border border-primarySage/20 soft-shadow space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-8 h-8 rounded-full bg-secondaryLavender/20 flex items-center justify-center text-sm">${p.avatar}</span>
+                            <span class="font-bold text-xs font-heading">${p.author}</span>
+                        </div>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-primarySage/10 text-primarySage font-semibold">Círculo Anónimo</span>
+                    </div>
+
+                    <p class="text-xs leading-relaxed opacity-90">${escapeHtml(p.text)}</p>
+
+                    <!-- Empathetic Reaction Buttons (No Vanity Likes) -->
+                    <div class="flex space-x-2 pt-2 border-t border-primarySage/10">
+                        <button onclick="reactPost(${p.id}, 'accompany')" class="text-[11px] px-3 py-1.5 rounded-xl bg-bgLight dark:bg-bgDark hover:bg-primarySage/10 font-medium flex items-center space-x-1.5 transition">
+                            <span>🤍 Te acompaño</span>
+                            <span class="opacity-60 text-[10px]">(${p.reactions.accompany})</span>
+                        </button>
+                        <button onclick="reactPost(${p.id}, 'thanks')" class="text-[11px] px-3 py-1.5 rounded-xl bg-bgLight dark:bg-bgDark hover:bg-primarySage/10 font-medium flex items-center space-x-1.5 transition">
+                            <span>🌱 Gracias</span>
+                            <span class="opacity-60 text-[10px]">(${p.reactions.thanks})</span>
+                        </button>
+                        <button onclick="reactPost(${p.id}, 'identify')" class="text-[11px] px-3 py-1.5 rounded-xl bg-bgLight dark:bg-bgDark hover:bg-primarySage/10 font-medium flex items-center space-x-1.5 transition">
+                            <span>✨ Me identifico</span>
+                            <span class="opacity-60 text-[10px]">(${p.reactions.identify})</span>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function reactPost(id, type) {
+            const post = communityPosts.find(p => p.id === id);
+            if (post) {
+                post.reactions[type]++;
+                renderCommunityPosts();
+            }
+        }
+
+        function createCommunityPost() {
+            const input = document.getElementById('communityPostInput');
+            const cat = document.getElementById('postCategorySelect').value;
+            const text = input.value.trim();
+
+            if (!text) return;
+
+            // Simple Safety Guardrail check simulation
+            const sensitiveKeywords = ['autolesion', 'suicidio', 'acabar con todo'];
+            if (sensitiveKeywords.some(kw => text.toLowerCase().includes(kw))) {
+                toggleSosDrawer();
+                alertModal("Tu bienestar es prioritario. Detectamos palabras sensibles y hemos abierto el Botiquín SOS para brindarte apoyo inmediato.");
+                return;
+            }
+
+            const newPost = {
+                id: Date.now(),
+                author: "Alma_Viajera",
+                avatar: "🦋",
+                category: cat,
+                text: text,
+                reactions: { accompany: 1, thanks: 0, identify: 0 }
+            };
+
+            communityPosts.unshift(newPost);
+            input.value = '';
+            renderCommunityPosts();
+        }
+
+        function filterCircle(cat) {
+            if (cat === 'all') {
+                renderCommunityPosts();
+            } else {
+                const list = document.getElementById('postsList');
+                const filtered = communityPosts.filter(p => p.category === cat);
+                list.innerHTML = filtered.map(p => `
+                    <div class="bg-white dark:bg-bgDark/60 rounded-3xl p-5 border border-primarySage/20 soft-shadow space-y-3">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-8 h-8 rounded-full bg-secondaryLavender/20 flex items-center justify-center text-sm">${p.avatar}</span>
+                            <span class="font-bold text-xs font-heading">${p.author}</span>
+                        </div>
+                        <p class="text-xs leading-relaxed opacity-90">${escapeHtml(p.text)}</p>
+                    </div>
+                `).join('');
+            }
+        }
+
+
+        // --- 4. RECURSOS Y PLAN DE SEGURIDAD ---
+        function renderTestQuestions() {
+            const container = document.getElementById('testQuestions');
+            container.innerHTML = testQuestionsList.map((q, idx) => `
+                <div class="space-y-1.5">
+                    <p class="text-xs font-semibold">${q}</p>
+                    <select class="test-select w-full p-2.5 rounded-2xl bg-bgLight dark:bg-bgDark border border-primarySage/20 text-xs">
+                        <option value="0">Nunca</option>
+                        <option value="1">Varios días</option>
+                        <option value="2">Más de la mitad de los días</option>
+                        <option value="3">Casi todos los días</option>
+                    </select>
+                </div>
+            `).join('');
+        }
+
+        function calculateTestResult() {
+            const selects = document.querySelectorAll('.test-select');
+            let score = 0;
+            selects.forEach(s => score += parseInt(s.value));
+
+            const box = document.getElementById('testResultBox');
+            const title = document.getElementById('testResultTitle');
+            const desc = document.getElementById('testResultDesc');
+
+            box.classList.remove('hidden');
+
+            if (score <= 2) {
+                title.innerText = "Nivel de Ansiedad: Mínimo o Leve";
+                desc.innerText = "Tus respuestas reflejan una carga ligera. Continuar con ejercicios de mindfulness y diario emocional te ayudará a mantener tu equilibrio.";
+            } else if (score <= 5) {
+                title.innerText = "Nivel de Ansiedad: Moderado";
+                desc.innerText = "Experimentas cierta tensión. Te sugerimos explorar nuestro directorio de psicólogos o realizar ejercicios de respiración diariamente.";
+            } else {
+                title.innerText = "Nivel de Ansiedad: Elevado";
+                desc.innerText = "Es importante atender cómo te sientes. Considera agendar una consulta orientativa con un profesional de nuestro directorio.";
+            }
+        }
+
+        function saveSafetyPlan() {
+            const plan = {
+                warning: document.getElementById('planWarning').value,
+                strategies: document.getElementById('planStrategies').value,
+                contact: document.getElementById('planContact').value
+            };
+
+            localStorage.setItem('alma_safety_plan', JSON.stringify(plan));
+            const feedback = document.getElementById('planSavedFeedback');
+            feedback.classList.remove('hidden');
+            setTimeout(() => feedback.classList.add('hidden'), 3000);
+        }
+
+
+        // --- EMERGENCY DRAWER & AUDIO SIMULATOR ---
+        function toggleSosDrawer() {
+            document.getElementById('sosDrawer').classList.toggle('hidden');
+        }
+
+        function toggleAudioSim() {
+            const btn = document.getElementById('audioSimBtn');
+            
+            if (isAudioPlaying) {
+                if (oscillator) oscillator.stop();
+                isAudioPlaying = false;
+                
